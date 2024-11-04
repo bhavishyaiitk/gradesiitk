@@ -4,7 +4,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load the data
-data = pd.read_excel('prof_grades.xlsx')  # Ensure this file is in the same directory as app.py
+data = pd.read_json('prof_grades.json')  # Ensure this file is in the same directory as app.py
 
 # Ensure columns are consistently formatted as strings for filtering
 data['Year'] = data['Year'].astype(str).str.strip()
