@@ -72,7 +72,7 @@
                 width: 60%; /* Make input box full width on smaller screens */
             }
             .box {
-                width: 80%; /* Make boxes take up more width on smaller screens */
+                width: 60%; /* Make boxes take up more width on smaller screens */
             }
         }
     </style>
@@ -102,10 +102,10 @@
     <div id="gradeChartContainer" style="display: none;">
         <div class="box">
             <h3>Grade Distribution</h3>
+            <canvas id="gradeChart"></canvas> <!-- Moved canvas inside the box -->
         </div>
-        <canvas id="gradeChart"></canvas>
     </div>
-
+    
     <!-- Load Chart.js from a CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -259,11 +259,11 @@
                     plugins: {
                         legend: {
                             labels: {
-                                color: 'white' // Set legend label color to blue (or any color you want)
+                                color: 'black' // Set legend label color to blue (or any color you want)
                             }
                         },
                         datalabels: {
-                            color: 'white', // Set data label color to white (or any color you want)
+                            color: 'black', // Set data label color to white (or any color you want)
                             formatter: (value, context) => {
                                 return value; // Show count value in the label
                             },
