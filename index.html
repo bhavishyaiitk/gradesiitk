@@ -182,7 +182,7 @@
     }
 
 
-        <script>
+        
         async function fetchGrades(courseName, year, semester) {
             const response = await fetch(`/get_grades?course_name=${courseName}&year=${year}&semester=${semester}`);
             const results = await response.json();
