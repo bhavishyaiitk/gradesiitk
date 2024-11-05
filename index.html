@@ -182,107 +182,103 @@
     }
 
 
-        
         async function fetchGrades(courseName, year, semester) {
-            const response = await fetch(`/get_grades?course_name=${courseName}&year=${year}&semester=${semester}`);
-            const results = await response.json();
-    
-            // Define the custom order for the grades
-            const gradeOrder = ['A*', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'E', 'F', 'X', 'S'];
-    
-            // Sort the results based on the custom order
-            results.sort((a, b) => {
-                return gradeOrder.indexOf(a.Grade) - gradeOrder.indexOf(b.Grade);
-            });
-    
-            const resultsBox = document.getElementById('results');
-            resultsBox.innerHTML = `<div class="box">
-                <h2>Grades for ${courseName} - ${year} - ${semester}</h2>
-            </div>`;
-    
-            // Create a table
-            const table = document.createElement('table');
-            table.style.width = '100%';
-            table.style.borderCollapse = 'collapse';
-            table.style.backgroundColor = 'white';
-            table.style.border = '2px solid black';
-            table.innerHTML = `<tr><th>Grades</th><th>No of Students</th></tr>`;
-    
-            if (results.length === 0) {
-                resultsBox.innerHTML += `<p>No data available for the selected course, year, and semester.</p>`;
-            } else {
-                results.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<td style="border: 1px solid black; padding: 8px;">${item.Grade}</td>
-                                    <td style="border: 1px solid black; padding: 8px;">${item.Count}</td>`;
-                    table.appendChild(row);
-                });
-    
-                resultsBox.appendChild(table);
-    
-                // Prepare data for the pie chart
-                const grades = results.map(item => item.Grade);
-                const counts = results.map(item => item.Count);
-    
-                // Define color mapping for grades
-                const colorMapping = {
-                    'A*': 'cyan',
-                    'A': 'darkgreen',
-                    'B+': '#FF6F61',
-                    'B': 'blue',
-                    'C+': '#66CDAA',
-                    'C': '#7FFF00',
-                    'D+': '#FFD700',
-                    'D': '#FFA500',
-                    'E': '#FF8C00',
-                    'S': '#66CDAA',
-                    'X': 'purple',
-                    'F': 'red'
-                };
-    
-                // Map grades to colors
-                const backgroundColors = grades.map(grade => colorMapping[grade] || '#CCCCCC');
-    
-                // Display the chart container
-                document.getElementById('gradeChartContainer').style.display = 'block';
-    
-                // Render the pie chart
-                const ctx = document.getElementById('gradeChart').getContext('2d');
-                if (window.gradeChart && window.gradeChart instanceof Chart) {
-                    window.gradeChart.destroy(); // Remove previous instance if exists
-                }
-    
-                window.gradeChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: grades,
-                        datasets: [{
-                            data: counts,
-                            backgroundColor: backgroundColors,
-                            hoverBackgroundColor: backgroundColors.map(color => color === '#CCCCCC' ? '#AAAAAA' : color)
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    color: 'white'
-                                }
-                            },
-                            datalabels: {
-                                color: 'white',
-                                formatter: (value) => value,
-                                anchor: 'end',
-                                align: 'end',
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    </script>
+        const response = await fetch(`/get_grades?course_name=${courseName}&year=${year}&semester=${semester}`);
+        const results = await response.json();
 
+        const resultsBox = document.getElementById('results');
+        resultsBox.innerHTML = ` <div class="box">
+            <h2>Grades for ${courseName} - ${year} - ${semester}</h2>
+        </div>`; // Header for results
+
+        // Create a table
+        const table = document.createElement('table');
+        table.style.width = '100%'; // Optional: Set width to 100%
+        table.style.borderCollapse = 'collapse'; // Optional: Collapsing borders
+        table.style.backgroundColor = 'white';
+        table.style.border = '2px solid black'; 
+        table.innerHTML = `<tr><th>Grades</th><th>No of Students</th></tr>`; // Table header
+
+        if (results.length === 0) {
+            resultsBox.innerHTML += `<p>No data available for the selected course, year, and semester.</p>`;
+        } else {    
+            results.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td style="border: 1px solid black; padding: 8px;">${item.Grade}</td>
+                                <td style="border: 1px solid black; padding: 8px;">${item.Count}</td>`;
+                table.appendChild(row);
+            });
+
+            resultsBox.appendChild(table); // Append the table to results box
+
+
+            // Prepare data for the pie chart
+            const grades = results.map(item => item.Grade);
+            const counts = results.map(item => item.Count);
+
+            // Define color mapping for grades
+            const colorMapping = {
+                'A*': 'cyan',
+                'A': 'darkgreen',
+                'B+': '#FF6F61', // Slightly less dark green
+                'B': 'blue', // Lime green
+                'C+': '#66CDAA', // Medium aquamarine
+                'C': '#7FFF00', // Chartreuse
+                'D+': '#FFD700', // Gold
+                'D': '#FFA500', // Orange
+                'E': '#FF8C00', // Dark orange
+                'S': '#66CDAA', // dark green
+                'X': 'red', // red
+                'F': 'red'
+            };
+
+            // Map grades to colors
+            const backgroundColors = grades.map(grade => colorMapping[grade] || '#CCCCCC'); // Default color if grade not found
+
+            // Display the chart container
+            document.getElementById('gradeChartContainer').style.display = 'block';
+
+            // Render the pie chart
+            const ctx = document.getElementById('gradeChart').getContext('2d');
+            if (window.gradeChart && window.gradeChart instanceof Chart) {
+                window.gradeChart.destroy(); // Remove previous instance if exists
+            }
+
+            window.gradeChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: grades, // Grades as labels for the pie chart
+                    datasets: [{
+                        data: counts, // Counts corresponding to each grade
+                        backgroundColor: backgroundColors, // Colors based on the grade mapping
+                        hoverBackgroundColor: backgroundColors.map(color => color === '#CCCCCC' ? '#AAAAAA' : color) // Change hover color slightly
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white' // Set legend label color to blue (or any color you want)
+                            }
+                        },
+                        datalabels: {
+                            color: 'white', // Set data label color to white (or any color you want)
+                            formatter: (value, context) => {
+                                return value; // Show count value in the label
+                            },
+                            anchor: 'end', // Anchor the label at the end of the segment
+                            align: 'end', // Align the label at the end of the segment
+                        },
+                    }
+                }
+            });
+        }
+    }
+
+    
+
+    </script>
 
 <head>
     <style type="text/css">
@@ -299,7 +295,7 @@
     </style>
 </head>
 <body>
-    <div class="footer">Made by Bhavishya, Y21, with complete use of ChatGPT.</div>
+    <div class="footer">Made by Bhavishya, Y21, with 100% use of ChatGPT when I was bored</div>
 </body>
 
 
