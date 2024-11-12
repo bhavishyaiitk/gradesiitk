@@ -1,9 +1,38 @@
 {
-  "version": 2,
   "builds": [
-    { "src": "app.js", "use": "@vercel/node" }
+    {
+      "src": "app.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/app.js" }
+    {
+      "src": "/suggest",
+      "dest": "/app.js"
+    },
+    {
+      "src": "/search",
+      "dest": "/app.js"
+    },
+    {
+      "src": "/get_years",
+      "dest": "/app.js"
+    },
+    {
+      "src": "/get_semesters",
+      "dest": "/app.js"
+    },
+    {
+      "src": "/get_grades",
+      "dest": "/app.js"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    }
   ]
 }
