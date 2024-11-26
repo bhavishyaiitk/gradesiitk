@@ -5,6 +5,9 @@ const path = require('path');
 
 const app = express();
 
+import { inject } from '@vercel/analytics';
+ 
+inject();
 // Enable CORS for all origins
 app.use(cors({ origin: '*' }));
 
